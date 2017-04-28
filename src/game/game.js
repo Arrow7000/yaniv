@@ -1,4 +1,7 @@
-import { newDeck } from './cards';
+import { newDeck, getValue } from './cards';
+
+const cardsEach = 7;
+const maxPlayers = 7;
 
 function makeArrays(count) {
     return new Array(count)
@@ -7,19 +10,22 @@ function makeArrays(count) {
 }
 
 export function initGame(playerCount) {
-    if (playerCount < 2 || playerCount > 10) {
-        throw new Error('Please specify between 2 and 10 players');
+    if (playerCount < 2 || playerCount > 7) {
+        throw new Error(`Please specify between 2 and ${maxPlayers} players`);
     }
 
-    const deck = newDeck();
-    const cardsEach = Math.floor(deck.length / playerCount);
+    const fullDeck = newDeck();
+    // const cardsEach = Math.floor(deck.length / playerCount);
     const hands = makeArrays(playerCount)
         .map((hand, handIndex) => {
-            return deck.slice(handIndex * cardsEach, (handIndex + 1) * cardsEach);
+            return fullDeck.slice(handIndex * cardsEach, (handIndex + 1) * cardsEach);
         });
-    const pile = deck.slice(hands.length * cardsEach);
+    const restOfDeck = fullDeck.slice(hands.length * cardsEach);
+    const pile = restOfDeck.slice(0, 1);
+    const deck = restOfDeck.slice(1);
 
     const gameState = {
+        deck,
         hands,
         pile,
         turnIndex: 0
@@ -32,11 +38,11 @@ function sort(a, b) { return a - b; }
 
 function takeFromHand(hand, value) {
     const newHand = hand.filter(card => {
-        return card !== value;
+        return getValue(card) !== value;
     });
 
     const toPile = hand.filter(card => {
-        return card === value;
+        return getValue(card) === value;
     });
 
     return {
@@ -59,15 +65,57 @@ function takeFromPile(pile) {
     }
 }
 
-export function turn(hand, value, pile) {
-    const postTakeFromHand = takeFromHand(hand, value);
-    const postTakeFromPile = takeFromPile(pile);
+function takeFromDeck(deck) {
+    if (deck.length < 1) {
+        throw new Error('Deck has no cards');
+    }
+    // const lastDeckIndex = deck.length - 1;
+    const toHand = deck[0];
+    const newDeck = deck.slice(1);
+    return {
+        toHand,
+        deck: newDeck
+    }
+}
 
-    const newHand = [...postTakeFromHand.hand, ...postTakeFromPile.toHand];
-    const newPile = [...postTakeFromPile.pile, ...postTakeFromHand.toPile];
+export function turn(handOrig, value, deckOrig, pileOrig, takingFromPile) {
+
+    const { hand, toPile } = takeFromHand(handOrig, value);
+
+    let toHand, deck, pile;
+    if (takingFromPile) {
+        const step = takeFromPile(pileOrig);
+        toHand = step.toHand;
+        pile = step.pile;
+        deck = deckOrig;
+    } else {
+        const step = takeFromDeck(deck);
+        toHand = step.toHand;
+        deck = step.deck;
+        pile = pileOrig;
+    }
+
+    const newHand = [...hand, ...toHand];
+    const newPile = [...pile, ...toPile];
 
     return {
         hand: newHand,
-        pile: newPile
+        pile: newPile,
+        deck
     }
 }
+
+// function turn(handOrig, value, deckOrig, pileOrig, takingFromPile) {
+//     const stackKey = takingFromPile ? 'pile' : 'deck';
+//     const stack = takingFromPile ? pileOrig : deckOrig;
+//     const untouchedStack = takingFromPile ? pileOrig : deckOrig;
+//     const stackTake = takingFromPile ? takeFromPile : takeFromDeck;
+
+//     const { hand, stack } = turnMove(handOrig, value, stack, stackTake);
+//     const deck =
+//         return {
+//             hand,
+//             deck: ,
+//             pile:
+//         }
+// }
