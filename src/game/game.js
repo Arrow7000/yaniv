@@ -57,7 +57,7 @@ function takeFromPile(pile) {
         throw new Error('Pile has no cards');
     }
     const lastPileIndex = pile.length - 1;
-    const toHand = pile[lastPileIndex];
+    const toHand = [pile[lastPileIndex]];
     const newPile = pile.slice(0, lastPileIndex);
     return {
         toHand,
@@ -70,7 +70,7 @@ function takeFromDeck(deck) {
         throw new Error('Deck has no cards');
     }
     // const lastDeckIndex = deck.length - 1;
-    const toHand = deck[0];
+    const toHand = [deck[0]];
     const newDeck = deck.slice(1);
     return {
         toHand,
@@ -89,15 +89,16 @@ export function turn(handOrig, value, deckOrig, pileOrig, takingFromPile) {
         pile = step.pile;
         deck = deckOrig;
     } else {
-        const step = takeFromDeck(deck);
+        const step = takeFromDeck(deckOrig);
         toHand = step.toHand;
+        console.log({ toHand });
         deck = step.deck;
         pile = pileOrig;
     }
 
     const newHand = [...hand, ...toHand];
     const newPile = [...pile, ...toPile];
-
+    console.log({ newHand, newPile });
     return {
         hand: newHand,
         pile: newPile,

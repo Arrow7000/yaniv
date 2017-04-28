@@ -61,7 +61,7 @@ class Game extends Component {
                                     <div
                                         key={card}
                                         style={{ display: 'inline-block', marginRight: '15px' }}
-                                        onClick={() => { if (turnIndex === handIndex) { this.turn(getValue(card), true) } }}>
+                                        onClick={() => { if (turnIndex === handIndex) { this.turn(getValue(card), false) } }}>
                                         {cardStr(card)}
                                     </div>);
                             })
