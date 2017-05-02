@@ -2,7 +2,9 @@ import range from 'lodash/range';
 import shuffle from 'lodash/shuffle';
 
 const suits = ['Clubs', 'Diamonds', 'Hearts', 'Spades'];
+const suitIcons = ['♧', '♢', '♡', '♤'];
 const royals = ['Ace', 'Jack', 'Queen', 'King'];
+const royalIcons = ['A', 'J', 'Q', 'K'];
 
 
 export function newDeck() {
@@ -11,19 +13,22 @@ export function newDeck() {
 }
 
 function suitStr(suitId) {
-    return suits[suitId];
+    // return suits[suitId];
+    return suitIcons[suitId];
 }
 
 function valueStr(value) {
+    // const strList = royals;
+    const strList = royalIcons;
     switch (value) {
         case 1:
-            return royals[0];
+            return strList[0];
         case 11:
-            return royals[1];
+            return strList[1];
         case 12:
-            return royals[2];
+            return strList[2];
         case 13:
-            return royals[3];
+            return strList[3];
         default:
             return value;
     }
@@ -35,6 +40,14 @@ export function cardStr(cardId) {
     return str;
 }
 
+export function cardObjStr(cardId) {
+    const { suit, value } = getCard(cardId);
+    return {
+        suit: suitStr(suit),
+        value: valueStr(value)
+    }
+}
+
 export function getSuit(cardId) {
     return Math.floor(cardId / 13) % 4;
 }
@@ -43,7 +56,7 @@ export function getValue(cardId) {
     return (cardId % 13) + 1;
 }
 
-function getCard(cardId) {
+export function getCard(cardId) {
     return {
         suit: getSuit(cardId),
         value: getValue(cardId)

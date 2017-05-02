@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { cardStr, getValue } from '../game/cards';
 import { initGame, turn } from '../game/game';
+import Card from './Card';
 
 class Game extends Component {
     constructor() {
@@ -84,12 +85,18 @@ class Game extends Component {
                 <h2>Deck</h2>
                 {
                     deck.map(card => {
-                        return (
+                        {/*return (
                             <div
                                 key={card}
                                 style={{ display: 'inline-block', marginRight: '15px' }}>
                                 {cardStr(card)}
                             </div>);
+                    })*/}
+                        return (
+                            <Card
+                                key={card}
+                                card={card}
+                                style={{ display: 'inline-block', marginRight: '15px' }} />);
                     })
                 }
                 <p>Total cards in deck: {totalInDeck}</p>
