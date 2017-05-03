@@ -1,28 +1,28 @@
-import React from 'react';
+import React, { Component } from 'react';
 import { cardObjStr } from '../game/cards';
 
 import './Card.css';
 
-function Card(props) {
-    const { card, hidden } = props;
+class Card extends Component {
+    render() {
+        const { card, hidden, onClick } = this.props;
+        const { value, suit } = cardObjStr(card);
 
-    const { value, suit } = cardObjStr(card);
+        function content(hidden) {
+            return hidden ?
+                (<div>
+                    \ /<br />
+                    / \<br />
+                </div>) : (<div>
+                    {value} {suit}<br />
+                    {suit} {value}<br />
+                </div>);
 
-    if (hidden) {
+        }
+
         return (
-            <div className="Card">
-                \ /<br />
-                / \<br />
-            </div>
-        );
-    } else {
-
-        return (
-            <div className="Card">
-                {value} {suit}<br />
-                {/*\ /<br />
-            / \<br />*/}
-                {suit} {value}<br />
+            <div className="Card" onClick={onClick}>
+                {content(hidden)}
             </div>
         );
     }
