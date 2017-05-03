@@ -59,14 +59,17 @@ class Game extends Component {
                         {
                             hand.map(card => {
                                 return (
-                                    <div
+                                    /*<div
                                         key={card}
-                                        style={{ display: 'inline-block', marginRight: '15px' }}
                                         onClick={() => { if (turnIndex === handIndex) { this.turn(getValue(card), false) } }}>
                                         {cardStr(card)}
-                                    </div>);
-                            })
-                        }
+                                    </div>);*/
+                                    <Card
+                                        onClick={() => { console.log('test click'); if (turnIndex === handIndex) { this.turn(getValue(card), false) } }}
+                                        key={card}
+                                        card={card} />
+                                );
+                            })}
                     </div>)
                 })}
                 <p>Total cards in hands: {totalInHands}</p>
@@ -74,29 +77,20 @@ class Game extends Component {
                 {
                     pile.map(card => {
                         return (
-                            <div
+                            <Card
                                 key={card}
-                                style={{ display: 'inline-block', marginRight: '15px' }}>
-                                {cardStr(card)}
-                            </div>);
+                                card={card} />);
                     })
                 }
                 <p>Total cards in pile: {totalInPile}</p>
                 <h2>Deck</h2>
                 {
                     deck.map(card => {
-                        {/*return (
-                            <div
-                                key={card}
-                                style={{ display: 'inline-block', marginRight: '15px' }}>
-                                {cardStr(card)}
-                            </div>);
-                    })*/}
                         return (
                             <Card
                                 key={card}
                                 card={card}
-                                style={{ display: 'inline-block', marginRight: '15px' }} />);
+                                hidden={true} />);
                     })
                 }
                 <p>Total cards in deck: {totalInDeck}</p>

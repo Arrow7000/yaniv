@@ -1,18 +1,16 @@
 import React from 'react';
 import { cardObjStr } from '../game/cards';
 
+import './Card.css';
+
 function Card(props) {
     const { card, hidden } = props;
 
     const { value, suit } = cardObjStr(card);
-    const style = {
-        border: 'black solid 2px',
-        display: 'inline-block'
-    };
 
-    if (!hidden) {
+    if (hidden) {
         return (
-            <div style={style}>
+            <div className="Card">
                 \ /<br />
                 / \<br />
             </div>
@@ -20,7 +18,7 @@ function Card(props) {
     } else {
 
         return (
-            <div style={style}>
+            <div className="Card">
                 {value} {suit}<br />
                 {/*\ /<br />
             / \<br />*/}
