@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { cardStr, getValue } from '../game/cards';
+import { getValue, sort } from '../game/cards';
 import { initGame, turn } from '../game/game';
 import Card from './Card';
 
@@ -11,7 +11,8 @@ class Game extends Component {
             deck: [],
             hands: [],
             pile: [],
-            turnIndex: null
+            turnIndex: null,
+            deckSelected: true
         };
 
         this.newGame = this.newGame.bind(this);
@@ -38,13 +39,18 @@ class Game extends Component {
         });
     }
 
+    select(deckSelected) {
+        this.setState({ deckSelected })
+    }
+
     render() {
-        const { deck, pile, hands, turnIndex } = this.state;
+        const { deck, pile, hands, turnIndex, deckSelected } = this.state;
         const totalInHands = hands
             .map(hand => hand.length)
             .reduce((total, handTotal) => total + handTotal, 0);
         const totalInPile = pile.length;
         const totalInDeck = deck.length;
+
         return (
             <div>
                 <button onClick={() => this.newGame(3)}>New Game</button>
@@ -56,44 +62,38 @@ class Game extends Component {
                             marginBottom: '20px',
                             border: turnIndex === handIndex ? '1px solid black' : 'none'
                         }}>
-                        {
-                            hand.map(card => {
-                                return (
-                                    /*<div
-                                        key={card}
-                                        onClick={() => { if (turnIndex === handIndex) { this.turn(getValue(card), false) } }}>
-                                        {cardStr(card)}
-                                    </div>);*/
-                                    <Card
-                                        onClick={() => { console.log('test click'); if (turnIndex === handIndex) { this.turn(getValue(card), false) } }}
-                                        key={card}
-                                        card={card} />
-                                );
-                            })}
+                        {sort(hand).map(card => (<Card
+                            onClick={() => { if (turnIndex === handIndex) { this.turn(getValue(card), deckSelected) } }}
+                            key={card}
+                            card={card} />))}
                     </div>)
                 })}
                 <p>Total cards in hands: {totalInHands}</p>
-                <h2>Pile</h2>
-                {
-                    pile.map(card => {
-                        return (
-                            <Card
-                                key={card}
-                                card={card} />);
-                    })
-                }
-                <p>Total cards in pile: {totalInPile}</p>
-                <h2>Deck</h2>
-                {
-                    deck.map(card => {
-                        return (
-                            <Card
-                                key={card}
-                                card={card}
-                                hidden={true} />);
-                    })
-                }
-                <p>Total cards in deck: {totalInDeck}</p>
+                <div onClick={() => this.select(false)}>
+                    <h2>Pile</h2>
+                    <div style={{ border: false === deckSelected ? '1px solid black' : 'none' }}>
+                        {sort(pile).map(card => {
+                            return (
+                                <Card
+                                    key={card}
+                                    card={card} />);
+                        })}
+                    </div>
+                    <p>Total cards in pile: {totalInPile}</p>
+                </div>
+                <div onClick={() => this.select(true)}>
+                    <h2>Deck</h2>
+                    <div style={{ border: true === deckSelected ? '1px solid black' : 'none' }}>
+                        {sort(deck).map(card => {
+                            return (
+                                <Card
+                                    key={card}
+                                    card={card}
+                                    hidden={true} />);
+                        })}
+                    </div>
+                    <p>Total cards in deck: {totalInDeck}</p>
+                </div>
                 <h3>Total cards: {totalInHands + totalInPile + totalInDeck}</h3>
             </div>
         );
