@@ -63,4 +63,17 @@ export function getCard(cardId) {
     }
 }
 
-// console.log(cards.map(cardStr));
+export function sort(cards) {
+    const sorted = [...cards].sort((a, b) => {
+        const valueA = getValue(a);
+        const valueB = getValue(b);
+        const suitA = getSuit(a);
+        const suitB = getSuit(b);
+        if (valueA !== valueB) {
+            return valueA - valueB;
+        } else {
+            return suitA - suitB;
+        }
+    });
+    return sorted;
+}

@@ -77,27 +77,25 @@ function takeFromDeck(deck) {
     }
 }
 
-export function turn(handOrig, value, deckOrig, pileOrig, takingFromPile) {
+export function turn(handOrig, value, deckOrig, pileOrig, takingFromDeck) {
 
     const { hand, toPile } = takeFromHand(handOrig, value);
 
     let toHand, deck, pile;
-    if (takingFromPile) {
+    if (takingFromDeck) {
+        const step = takeFromDeck(deckOrig);
+        toHand = step.toHand;
+        deck = step.deck;
+        pile = pileOrig;
+    } else {
         const step = takeFromPile(pileOrig);
         toHand = step.toHand;
         pile = step.pile;
         deck = deckOrig;
-    } else {
-        const step = takeFromDeck(deckOrig);
-        toHand = step.toHand;
-        console.log({ toHand });
-        deck = step.deck;
-        pile = pileOrig;
     }
 
     const newHand = [...hand, ...toHand];
     const newPile = [...pile, ...toPile];
-    console.log({ newHand, newPile });
     return {
         hand: newHand,
         pile: newPile,
