@@ -19,6 +19,10 @@ class Game extends Component {
         this.turn = this.turn.bind(this);
     }
 
+    componentDidMount() {
+        this.newGame(3);
+    }
+
     newGame(players) {
         this.setState(initGame(players));
     }
@@ -39,8 +43,16 @@ class Game extends Component {
         });
     }
 
-    select(deckSelected) {
+    selectPickup(deckSelected) {
         this.setState({ deckSelected })
+    }
+
+    selectValueToDrop(value) {
+
+    }
+
+    click() {
+
     }
 
     render() {
@@ -63,7 +75,11 @@ class Game extends Component {
                             border: turnIndex === handIndex ? '1px solid black' : 'none'
                         }}>
                         {sort(hand).map(card => (<Card
-                            onClick={() => { if (turnIndex === handIndex) { this.turn(getValue(card), deckSelected) } }}
+                            onClick={() => {
+                                if (turnIndex === handIndex) {
+                                    this.turn(getValue(card), deckSelected)
+                                }
+                            }}
                             key={card}
                             card={card} />))}
                     </div>)
@@ -73,10 +89,9 @@ class Game extends Component {
                     <h2>Pile</h2>
                     <div style={{ border: false === deckSelected ? '1px solid black' : 'none' }}>
                         {sort(pile).map(card => {
-                            return (
-                                <Card
-                                    key={card}
-                                    card={card} />);
+                            return (<Card
+                                key={card}
+                                card={card} />);
                         })}
                     </div>
                     <p>Total cards in pile: {totalInPile}</p>
@@ -85,11 +100,10 @@ class Game extends Component {
                     <h2>Deck</h2>
                     <div style={{ border: true === deckSelected ? '1px solid black' : 'none' }}>
                         {sort(deck).map(card => {
-                            return (
-                                <Card
-                                    key={card}
-                                    card={card}
-                                    hidden={true} />);
+                            return (<Card
+                                key={card}
+                                card={card}
+                                hidden={true} />);
                         })}
                     </div>
                     <p>Total cards in deck: {totalInDeck}</p>
